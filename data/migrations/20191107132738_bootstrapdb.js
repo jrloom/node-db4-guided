@@ -22,6 +22,7 @@ exports.up = function(knex) {
     .createTable("zoos", tbl => {
       tbl.increments();
       tbl.string("name", 255).notNullable();
+      tbl.string("address", 255);
     })
     .createTable("animal_zoos", tbl => {
       tbl.increments();
@@ -39,7 +40,15 @@ exports.up = function(knex) {
         .inTable("zoos")
         .onDelete("RESTRICT")
         .onUpdate("CASCADE");
+      tbl.date("from").notNullable();
+      tbl.date("to");
     });
 };
 
-exports.down = function(knex) {};
+exports.down = function(knex) {
+  return knex.schema
+    .dropTableIfExists("animal_zoos")
+    .dropTableIfExists("zoos")
+    .dropTableIfExists("animals")
+    .dropTableIfExists("species");
+};
